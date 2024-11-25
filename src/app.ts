@@ -36,13 +36,7 @@ const limiter = rateLimit({
 });
 app.use(cors());
 
-app.use(
-  cors({
-    origin: 'http://localhost:3000', // Frontend origin
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-    credentials: true, // Include cookies, if needed
-  }),
-);
+app.options('*', cors());
 app.use('/api', limiter);
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
