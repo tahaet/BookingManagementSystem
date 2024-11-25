@@ -6,9 +6,9 @@ import SD from '../utils/SD.js';
 const router = express.Router();
 // const upload = multer({ dest: `${__dirname}/../public/img/users` });
 
+router.get('/logout', authController.logout);
 router.post('/signup', authController.signUp);
 router.post('/login', authController.login);
-router.get('/logout', authController.logout);
 router.post('/forgotPassword', authController.forgotPassword);
 router.post(
   '/activateAccountRequest',

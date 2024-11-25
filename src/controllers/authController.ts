@@ -30,10 +30,10 @@ const signUp = catchAsync(
     const newUser = await User.create({
       name: req.body.name,
       email: req.body.email,
-      // photo: req.body.photo || '',
+      photo: req.body.photo,
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm,
-      // passwordChangedAt: req.body?.passwordChangedAt || undefined,
+      // passwordChangedAt: req.body?.passwordChangedAt,
       role: req.body.role || SD.roleUser,
     });
 
@@ -74,15 +74,15 @@ const protect = catchAsync(
       req.headers.authorization.startsWith('Bearer')
     ) {
       token = req.headers.authorization.split(' ')[1];
-    } else if (req.cookies.jwt) {
+    } else if (req.cookies.jwt && req.cookies.jwt !== 'loggedout') {
       token = req.cookies.jwt;
     }
 
-    if (!token)
-      throw new AppError(
-        'You are not logged in! please log in an try again',
-        401,
-      );
+    if (!token) res.redirect('/login');
+    // throw new AppError(
+    //   'You are not logged in! please log in an try again',
+    //   401,
+    // );
     const decoded: any = await util.promisify<string, string>(jwt.verify)(
       token,
       process.env.JWT_SECRET || '',
@@ -133,10 +133,18 @@ const isLoggedIn = async (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 const logout = (req: Request, res: Response) => {
-  res.cookie('jwt', 'logged out', {
+  res.cookie('jwt', 'loggedout', {
     httpOnly: true,
     expires: new Date(Date.now() + 10 * 1000),
+    secure: process.env.NODE_ENV === 'production', // Secure in production
+    // sameSite: 'lax', // Protect against CSRF
+    // path: '/', // Ensure cookie is available across all paths
   });
+
+  // Clear the Authorization header if it exists
+  if (req.headers.authorization) {
+    req.headers.authorization = '';
+  }
   res.status(200).json({ status: 'success' });
 };
 const restrictTo = (...roles: string[]) => {
