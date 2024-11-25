@@ -16,6 +16,7 @@ import xss from 'xss-clean';
 import mongoSanitize from 'express-mongo-sanitize';
 import path from 'path';
 import cookieParser from 'cookie-parser';
+import compression from 'compression';
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -57,6 +58,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
 app.use('/', viewRouter);
+app.use(compression());
 // app.use('/api/v1/tests', (req: Request, res: Response) => {
 //   res.status(200).send('Test endpoint');
 // });

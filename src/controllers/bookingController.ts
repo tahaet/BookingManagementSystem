@@ -14,7 +14,7 @@ const setTourBookingIds = (req: any, res: Response, next: NextFunction) => {
 const getCheckoutSession = catchAsync(
   async (req: any, res: Response, next: NextFunction) => {
     const tour = await Tour.findById(req.params.tourId);
-    console.log(tour);
+    // console.log(tour);
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [

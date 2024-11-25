@@ -12,15 +12,12 @@ router.get(
 );
 router.get('/tour/:slug', authController.isLoggedIn, viewController.getTour);
 router.get('/login', authController.isLoggedIn, viewController.getLogin);
+router.get('/signup', viewController.getSignup);
 router.get(
   '/me',
   authController.isLoggedIn,
   authController.protect,
   viewController.getAccount,
 );
-router.get(
-  '/my-tours',
-  authController.protect,
-  viewController.getMyTours,
-);
+router.get('/my-tours', authController.protect, viewController.getMyTours);
 export default router;

@@ -30,10 +30,10 @@ const signUp = catchAsync(
     const newUser = await User.create({
       name: req.body.name,
       email: req.body.email,
-      photo: req.body.photo,
+      // photo: req.body.photo || '',
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm,
-      passwordChangedAt: req.body?.passwordChangedAt,
+      // passwordChangedAt: req.body?.passwordChangedAt || undefined,
       role: req.body.role || SD.roleUser,
     });
 
@@ -56,7 +56,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
   if (!email || !password)
     throw new AppError('Please provide email and password', 400);
   const user = await User.findOne({ email }, { password: 1 });
-  console.log(user);
+  // console.log(user);
   if (!user || !(await user.checkPassword(password, user.password))) {
     throw new AppError('Incorrect email and/or password', 400);
   }
@@ -207,7 +207,7 @@ const resetPassword = catchAsync(
         'Token is invalid or has expired, please try again',
         400,
       );
-    console.log(user);
+    // console.log(user);
     if (await user.checkPassword(req.body.password, user.password))
       throw new AppError(
         'This is the same old password, please choose a new one',
